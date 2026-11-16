@@ -1,17 +1,14 @@
--- Creación de la base de datos para Taskshield
-DROP DATABASE IF EXISTS taskshield;
-CREATE DATABASE taskshield CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS taskshield CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE taskshield;
 
--- Tabla de Técnicos
 CREATE TABLE tecnicos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    especialidad VARCHAR(100) DEFAULT NULL,
     tareas_activas INT DEFAULT 0
 ) ENGINE=InnoDB;
 
--- Tabla de Incidencias
 CREATE TABLE incidencias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(150) NOT NULL,
@@ -24,11 +21,10 @@ CREATE TABLE incidencias (
     CONSTRAINT fk_tecnico FOREIGN KEY (tecnico_id) REFERENCES tecnicos(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
--- Datos de prueba iniciales
-INSERT INTO tecnicos (nombre, email, tareas_activas) VALUES 
-('Ana Gómez', 'ana.gomez@empresa.com', 0),
-('Carlos Ruiz', 'carlos.ruiz@empresa.com', 0);
+INSERT INTO tecnicos (nombre, email, especialidad, tareas_activas) VALUES
+('Laura Gómez', 'laura@soporte.es', 'Redes y Servidores', 1),
+('Carlos Ruiz', 'carlos@soporte.es', 'Hardware', 0);
 
-INSERT INTO incidencias (titulo, descripcion, prioridad, estado, email_cliente, tecnico_id) VALUES 
-('Error en impresora planta 2', 'La impresora departamental no coge papel y da error de bandeja.', 'Media', 'Pendiente', 'cliente1@empresa.com', NULL),
-('Fallo de acceso VPN', 'No es posible conectar a la VPN corporativa desde remoto.', 'Alta', 'Pendiente', 'cliente2@empresa.com', NULL);
+INSERT INTO incidencias (titulo, descripcion, prioridad, estado, email_cliente, tecnico_id) VALUES
+('Caída de red planta 2', 'No hay conexión a internet en los puestos del ala norte.', 'Urgente', 'En Proceso', 'admin@empresa.com', 1),
+('Impresora atascada', 'La impresora láser de recepción marca error de rodillo.', 'Baja', 'Pendiente', 'recepcion@empresa.com', NULL);
