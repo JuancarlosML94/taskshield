@@ -1,0 +1,7 @@
+# Casos de Prueba Ejecutados
+
+| Nº | Caso de Prueba | Acción Realizada | Resultado Esperado | Resultado Obtenido |
+|---|---|---|---|---|
+| 1 | Email inválido en alta (`nueva_incidencia.php`) | Se introduce `correo-sin-arroba` en el campo email y se envía el formulario. | `filter_input(..., FILTER_VALIDATE_EMAIL)` rechaza el dato y muestra mensaje de error sin insertar en BD. | **Correcto**: Se muestra la alerta de datos inválidos y no se crea registro. |
+| 2 | Edición de ID inexistente (`editar_incidencia.php?id=9999`) | Se accede manualmente por URL pasando un ID que no existe en la tabla `incidencias`. | El sistema detecta que `fetch()` devuelve `false` y redirige a `index.php` con aviso de error. | **Correcto**: Redirige al panel principal mostrando *"Error: La incidencia #9999 no existe"*. |
+| 3 | Fallo en segunda consulta de transacción (`asignar_tecnico.php`) | Se fuerza un `tecnico_id` inexistente (`999`) en el envío POST tras ejecutar el primer `UPDATE` sobre la incidencia. | Salta la excepción, se ejecuta `$pdo->rollBack()` y la incidencia mantiene su estado anterior (`Pendiente`) sin técnico asignado. | **Correcto**: Se muestra el error de RollBack y en phpMyAdmin se comprueba que la incidencia no cambió de estado. |
